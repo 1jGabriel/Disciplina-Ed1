@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+struct waze     {
+ char motorista [120];
+ char carro [100];
+ int placa;
+ };
+ int main(){
+    FILE *fp;
+    int i;
+    int x;
+    printf("Digite o numero de motoristas a serem cadastrados: \n");
+    scanf("%d",&x);
+    struct waze cadastro[x];
+    struct waze cadastro_temp[x];
+ //vai receber o dados de fseek
+    for(i=0;i<x;i++){
+        system("CLS");
+        fflush(stdin);
+        printf("Digite o nome do motorista %d: \n", i+1);
+        gets(cadastro[i].motorista);
+        printf("Digite o nome do modelo do carro: \n");
+        gets(cadastro[i].carro);
+        printf("Digite o numero da placa: \n");
+        scanf("%d",&cadastro[i].placa);
+        fflush(stdin);
+        }
+    if ((fp=fopen("cadastro.bin","wb"))==NULL){
+    printf("Erro ao criar arquivo");
+    exit(0);
+    }
+    else {
+    fwrite(&cadastro[0],sizeof(struct waze),x,fp);
+    fclose(fp);
+    }
+    if ((fp=fopen("cadastro.bin","rb"))==NULL){
+    printf("Erro ao abrir arquivo");
+    exit(0);
+    }
+    else {
+    fseek(fp,0*sizeof(struct waze),SEEK_SET);
+    fread(&cadastro_temp[0],sizeof(struct waze),x,fp);
+    fseek(fp,2*sizeof(struct waze),SEEK_SET);
+    fclose(fp);
+    system("CLS");
+    printf("\n**************************************\n");
+    printf("\n***************UBER*******************\n");
+    printf("\n**************************************\n");
+    printf("\nDados dos motoristas cadastrados:\n");
+    printf("\n**************************************\n");
+    for (i=0;i<x;i++){
+        printf("\nNome do motorista:%s\n", cadastro_temp[i].motorista);
+        printf("Modelo do carro: %s\n", cadastro_temp[i].carro);
+        printf("Numero da placa: %d\n", cadastro_temp[i].placa);
+        }
+    getch();
+    }return 0;
+}//fim main
